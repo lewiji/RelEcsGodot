@@ -21,11 +21,9 @@ namespace RelEcs
 
     public static class GodotExtensions
     {
-        public static Entity Spawn(this World world, Node root)
+        public static EntityBuilder Spawn(this World world, Node root)
         {
-            var entity = world.Spawn().Id();
-            world.AttachNode(entity, root);
-            return entity;
+	        return world.Spawn().Attach(root);
         }
 
         public static void AttachNode(this World world, Entity entity, Node root)
@@ -37,12 +35,12 @@ namespace RelEcs
 
             foreach (var node in nodes)
             {
-                var addMethod = typeof(GodotExtensions).GetMethod("AddNodeComponent");
+                var addMethod = typeof(GodotExtensions).GetMethod(nameof(AddNodeComponent));
                 var addChildMethod = addMethod?.MakeGenericMethod(node.GetType());
                 addChildMethod?.Invoke(null, new object[] { world, entity, node });
             }
 
-            if (root is ISpawnable spawnable) spawnable.Spawn(world.On(entity));
+            if (root is ISpawnable spawnable) spawnable.Spawn(new EntityBuilder(world, entity));
         }
 
         public static void AddNodeComponent<T>(World world, Entity entity, T node) where T : Node, new()
