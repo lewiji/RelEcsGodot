@@ -23,7 +23,7 @@ namespace RelEcs
     {
         public static EntityBuilder Spawn(this World world, Node root)
         {
-	        return world.Spawn().Attach(root);
+	        return world.Spawn().Attach(world, root);
         }
 
         public static void AttachNode(this World world, Entity entity, Node root)
@@ -54,9 +54,9 @@ namespace RelEcs
             world.Despawn(entity);
         }
 
-        public static EntityBuilder Attach(this EntityBuilder entityBuilder, Node node)
+        public static EntityBuilder Attach(this EntityBuilder entityBuilder, World world, Node node)
         {
-            entityBuilder.World.AttachNode(entityBuilder.Id(), node);
+            world.AttachNode(entityBuilder.Id(), node);
             return entityBuilder;
         }
     }
