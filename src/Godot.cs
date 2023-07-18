@@ -31,14 +31,14 @@ namespace RelEcs
             world.AddComponent(entity, new Root { Node = root });
             root.SetMeta("Entity", new Marshallable<Entity>(entity));
             
-            var nodes = root.GetChildren().Cast<Node>().Prepend(root).ToList();
+            //var nodes = root.GetChildren().Cast<Node>().Prepend(root).ToList();
 
-            foreach (var node in nodes)
-            {
+            //foreach (var node in nodes)
+            //{
                 var addMethod = typeof(GodotExtensions).GetMethod(nameof(AddNodeComponent));
-                var addChildMethod = addMethod?.MakeGenericMethod(node.GetType());
-                addChildMethod?.Invoke(null, new object[] { world, entity, node });
-            }
+                var addChildMethod = addMethod?.MakeGenericMethod(root.GetType());
+                addChildMethod?.Invoke(null, new object[] { world, entity, root });
+            //}
 
             if (root is ISpawnable spawnable) spawnable.Spawn(new EntityBuilder(world, entity));
         }
